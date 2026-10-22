@@ -2,16 +2,21 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 import os
 
-# Use DB_PATH env var in production (e.g., Render persistent disk at /data)
-# Falls back to local todos.db for development
-DB_PATH = os.getenv("DB_PATH", "todos.db")
-DATABASE_URL = f"sqlite:///{DB_PATH}"
+# In production, Render sets DATABASE_URL automatically for linked PostgreSQL.
+# For local development, falls back to SQLite.
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///todos.db")
 
-# Ensure the parent directory exists (fixes Render e3q8 error when /data dir
-# doesn't exist yet on first boot or when no disk is attached)
-db_dir = os.path.dirname(DB_PATH)
-if db_dir:
-    os.makedirs(db_dir, exist_ok=True)
+# Render's PostgreSQL URL starts with "postgres://" but SQLAlchemy requires
+# "postgresql://" — fix it automatically
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# SQLite only: ensure parent directory exists
+if DATABASE_URL.startswith("sqlite:///"):
+    db_path = DATABASE_URL.replace("sqlite:///", "")
+    db_dir = os.path.dirname(db_path)
+    if db_dir:
+        os.makedirs(db_dir, exist_ok=True)
 
 engine = create_engine(DATABASE_URL)
 LocalSession = sessionmaker(bind=engine)
