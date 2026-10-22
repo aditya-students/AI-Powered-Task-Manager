@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: ai-task-manager
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false   # paste your key manually in the Render dashboard
+      - key: DB_PATH
+        value: /data/todos.db
+    disk:
+      name: sqlite-data
+      mountPath: /data
+      sizeGB: 1

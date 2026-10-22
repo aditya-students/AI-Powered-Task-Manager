@@ -1,7 +1,11 @@
-from sqlalchemy import create_engine, Column, Integer,String
+from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+import os
 
-DATABASE_URL = "sqlite:///todos.db"
+# Use DB_PATH env var in production (e.g., Render persistent disk at /data)
+# Falls back to local todos.db for development
+DB_PATH = os.getenv("DB_PATH", "todos.db")
+DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(DATABASE_URL)
 LocalSession = sessionmaker(bind=engine)
