@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Task Manager – Smart Todo with AI Assistant</title>
+  <meta name="description" content="An AI-powered task manager with natural language chat, beautiful glassmorphism design, and smart task organization." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<!-- ─── Background Orbs ──────────────────────────────────────────── -->
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+
+<!-- ─── App Shell ────────────────────────────────────────────────── -->
+<div class="app-shell">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────── -->
+  <aside class="sidebar glass">
+    <div class="sidebar-brand">
+      <div class="brand-icon">✦</div>
+      <div>
+        <h1 class="brand-name">TaskFlow</h1>
+        <span class="brand-tagline">AI Powered</span>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="sidebar-section">
+      <p class="sidebar-label">Overview</p>
+      <div class="stat-grid">
+        <div class="stat-card" id="stat-total">
+          <span class="stat-num" id="total-count">0</span>
+          <span class="stat-desc">Total</span>
+        </div>
+        <div class="stat-card stat-blue" id="stat-progress">
+          <span class="stat-num" id="progress-count">0</span>
+          <span class="stat-desc">In Progress</span>
+        </div>
+        <div class="stat-card stat-green" id="stat-done">
+          <span class="stat-num" id="done-count">0</span>
+          <span class="stat-desc">Done</span>
+        </div>
+        <div class="stat-card stat-orange" id="stat-pending">
+          <span class="stat-num" id="pending-count">0</span>
+          <span class="stat-desc">Pending</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="sidebar-section">
+      <p class="sidebar-label">Filter by Status</p>
+      <div class="filter-group" id="status-filters">
+        <button class="filter-btn active" data-status="all">🗂️ All Tasks</button>
+        <button class="filter-btn" data-status="pending">⏳ Pending</button>
+        <button class="filter-btn" data-status="in_progress">🔄 In Progress</button>
+        <button class="filter-btn" data-status="done">✅ Done</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-label">Filter by Priority</p>
+      <div class="filter-group" id="priority-filters">
+        <button class="filter-btn pf active" data-priority="all">All</button>
+        <button class="filter-btn pf" data-priority="high">🔴 High</button>
+        <button class="filter-btn pf" data-priority="medium">🟡 Medium</button>
+        <button class="filter-btn pf" data-priority="low">🟢 Low</button>
+      </div>
+    </div>
+
+    <!-- AI Chat toggle -->
+    <button class="sidebar-ai-btn" id="toggle-chat-btn">
+      <span class="ai-icon">🤖</span>
+      <span>Ask AI Assistant</span>
+    </button>
+  </aside>
+
+  <!-- ── Main Content ─────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- Header -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h2 class="page-title" id="page-title">All Tasks</h2>
+        <span class="task-count-badge" id="task-count-badge">0 tasks</span>
+      </div>
+      <div class="topbar-right">
+        <div class="search-box glass-sm">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search tasks…" />
+        </div>
+        <button class="add-task-btn" id="add-task-btn">
+          <span>+</span> New Task
+        </button>
+      </div>
+    </header>
+
+    <!-- Tasks Grid -->
+    <div class="tasks-container" id="tasks-container">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">📋</div>
+        <p class="empty-title">No tasks yet</p>
+        <p class="empty-sub">Click "New Task" or ask the AI assistant to create one!</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── AI Chat Panel ────────────────────────────────────────── -->
+  <aside class="chat-panel glass" id="chat-panel">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="ai-avatar">🤖</div>
+        <div>
+          <p class="chat-title">AI Assistant</p>
+          <span class="chat-status">● Online</span>
+        </div>
+      </div>
+      <button class="chat-close-btn" id="chat-close-btn">✕</button>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-msg ai-msg">
+        <div class="msg-bubble">
+          👋 Hi! I'm your AI task assistant. You can tell me things like:<br><br>
+          <em>"Create a task to review the project proposal with high priority"</em><br>
+          <em>"Show all pending tasks"</em><br>
+          <em>"Mark task 3 as done"</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Ask me anything about your tasks…" />
+      <button class="chat-send-btn" id="chat-send-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </aside>
+</div>
+
+<!-- ─── Add / Edit Task Modal ────────────────────────────────────── -->
+<div class="modal-overlay" id="task-modal-overlay">
+  <div class="modal glass" id="task-modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title">New Task</h3>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <form id="task-form">
+      <input type="hidden" id="task-id" />
+
+      <div class="form-group">
+        <label class="form-label" for="task-title">Title <span class="required">*</span></label>
+        <input class="form-input glass-sm" type="text" id="task-title" placeholder="What needs to be done?" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="task-description">Description</label>
+        <textarea class="form-input form-textarea glass-sm" id="task-description" placeholder="Add more details…" rows="3"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="task-priority">Priority</label>
+          <select class="form-input glass-sm" id="task-priority">
+            <option value="low">🟢 Low</option>
+            <option value="medium" selected>🟡 Medium</option>
+            <option value="high">🔴 High</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="task-status">Status</label>
+          <select class="form-input glass-sm" id="task-status">
+            <option value="pending">⏳ Pending</option>
+            <option value="in_progress">🔄 In Progress</option>
+            <option value="done">✅ Done</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="task-due-date">Due Date</label>
+        <input class="form-input glass-sm" type="date" id="task-due-date" />
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="modal-cancel">Cancel</button>
+        <button type="submit" class="btn-primary" id="modal-submit">Create Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ─── Delete Confirm Modal ─────────────────────────────────────── -->
+<div class="modal-overlay" id="delete-modal-overlay">
+  <div class="modal modal-sm glass" id="delete-modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Delete Task?</h3>
+      <button class="modal-close" id="delete-modal-close">✕</button>
+    </div>
+    <p class="delete-confirm-text">Are you sure you want to delete <strong id="delete-task-title"></strong>? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="delete-cancel">Cancel</button>
+      <button class="btn-danger" id="delete-confirm">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Toast ─────────────────────────────────────────────────────── -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
