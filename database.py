@@ -7,6 +7,12 @@ import os
 DB_PATH = os.getenv("DB_PATH", "todos.db")
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
+# Ensure the parent directory exists (fixes Render e3q8 error when /data dir
+# doesn't exist yet on first boot or when no disk is attached)
+db_dir = os.path.dirname(DB_PATH)
+if db_dir:
+    os.makedirs(db_dir, exist_ok=True)
+
 engine = create_engine(DATABASE_URL)
 LocalSession = sessionmaker(bind=engine)
 
